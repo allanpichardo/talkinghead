@@ -1,7 +1,8 @@
 let messageQueue = [];
+let socket;
 
 function main() {
-    let socket = new WebSocket("ws://localhost:8080");
+    socket = new WebSocket("ws://localhost:8080");
 
     socket.onmessage = function(event) {
         processSocketMessage(event.data);
@@ -33,13 +34,32 @@ function initTicker() {
 }
 
 function displayNextTweet() {
-    console.log("next tweet");
+    let marquee = $('.marquee');
     let tweet = messageQueue.length > 0 ? messageQueue.shift() : null;
     let text = tweet ? tweet.text : "Start a conversation with #talkinghead on Twitter";
     let handle = tweet ? tweet.user.screen_name : null;
-    $('.marquee').html(`<p>${text}</p>`);
-    $('.marquee').one('animationiteration', displayNextTweet);
+    marquee.html(`<p>${text}</p>`);
+    marquee.one('animationiteration', displayNextTweet);
     toggleUsername(handle);
+    if(handle) {
+        queueConversation(text);
+    }
+}
+
+function queueConversation(text) {
+    text = text.replace(/(@[^ ]+)/g, '').
+                replace(/(#[^ ]+)/g, '').
+                replace(/(https?:\/\/[^ ]+)/g, '').
+                replace(/(RT)/g, '').
+                replace(/(-)/g, '').
+                trim();
+    if(text) {
+        let data = {
+            route: 'discuss',
+            text: text
+        };
+        socket.send(JSON.stringify(data));
+    }
 }
 
 function toggleUsername(username) {
@@ -67,6 +87,5 @@ function displayDate() {
 }
 
 function handleTweetReceived(data) {
-    console.log("Queued tweet");
     messageQueue.push(data);
 }
