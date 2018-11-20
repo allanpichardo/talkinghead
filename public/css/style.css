@@ -1,0 +1,104 @@
+:root {
+    --bg1_radius: 27px; /* 25px -> 64px */
+    --bg2_traingle_size: 11px; /* 11px ->  60px */
+}
+
+body {
+    font-family: sans-serif;
+    box-sizing: border-box;
+    margin:0;
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-areas:
+    "time"
+    "main"
+    "stream";
+    grid-template-rows: 40px 1fr 80px;
+}
+
+.main {
+    display: grid;
+    grid-template-areas:
+    "pundit1 pundit2 headlines";
+    grid-template-columns: 2fr 2fr 1fr;
+    grid-area: main;
+    min-height:500px;
+}
+
+.pundit1 {
+    box-sizing: border-box;;
+    position:relative;
+    grid-area: pundit1;
+    border: 1px black solid;
+}
+
+.pundit2 {
+    box-sizing: border-box;
+    border: 1px black solid;
+    grid-area: pundit2;
+}
+
+.headlines {
+    box-sizing: border-box;
+    border: 1px black solid;
+    grid-area: headlines;
+}
+
+.time {
+    padding-left: 16px;
+    grid-area: time;
+    background-color: black;
+    color: white;
+    font-size: 0.8rem;
+}
+
+.marquee {
+    grid-area: stream;
+    overflow:hidden;
+    font-size: 3rem;
+    white-space: nowrap;
+    box-sizing: border-box;
+    line-height:0px;
+}
+.marquee p {
+    display: inline-block;
+    padding-left: 100%;
+    animation: marquee 20s linear infinite;
+}
+@keyframes marquee {
+    0%   { transform: translate(0, 0); }
+    100% { transform: translate(-100%, 0); }
+}
+
+.slider {
+    box-sizing:border-box;
+    position:absolute;
+    bottom:0;
+    left:0;
+    height:40px;
+    width: 0;
+    z-index:2;
+    background-color: white;
+    transition: width 1s ease-in-out;
+    overflow:hidden;
+}
+
+#handle p{
+    min-width: 100%;
+}
+
+.slider-open {
+    width: 80%;
+}
+
+.blue_pattern_background {
+    background-image: radial-gradient(midnightblue 6px, transparent 10px),
+    repeating-radial-gradient(midnightblue 0, midnightblue 17px, transparent 5px, transparent 20px, midnightblue 14px, midnightblue 25px, transparent -2px, transparent var(--bg1_radius));
+    background-size: 30px 30px, 90px 90px;
+}
+
+.red_pattern_background {
+    background: linear-gradient(-45deg, #ff5c50 var(--bg2_traingle_size), transparent 1%), #ff1837;
+    background-size: 50px 50px;
+}
