@@ -1,8 +1,15 @@
 let messageQueue = [];
+let dialogueQueue = [];
 let socket;
+let synthesizer;
+let voices;
 
 function main() {
     socket = new WebSocket("ws://localhost:8080");
+    synthesizer = window.speechSynthesis;
+    synthesizer.onvoiceschanged = function() {
+        voices = synthesizer.getVoices();
+    };
 
     socket.onmessage = function(event) {
         processSocketMessage(event.data);
@@ -15,11 +22,38 @@ function main() {
     initTicker();
 }
 
+function startConversation() {
+    if(!synthesizer.speaking && dialogueQueue.length > 0) {
+        let conversation = dialogueQueue.shift();
+        let left = new SpeechSynthesisUtterance(conversation.parent);
+        left.voice = voices.filter(function(voice) { return voice.name === 'Fiona'; })[0];
+
+        left.onend = function(e) {
+            let right = new SpeechSynthesisUtterance(conversation.comment);
+            right.voice = voices.filter(function(voice) { return voice.name === 'Alex'; })[0];
+            synthesizer.speak(right);
+
+            right.onend = function() {
+                startConversation();
+            };
+        };
+        synthesizer.speak(left);
+    }
+}
+
+function handleDialogueReceived(data) {
+    dialogueQueue.push(data);
+    startConversation();
+}
+
 function processSocketMessage(data) {
     data = JSON.parse(data);
     switch(data.route) {
         case 'tweet':
             handleTweetReceived(data);
+            break;
+        case 'dialogue':
+            handleDialogueReceived(data);
             break;
     }
 }
@@ -42,11 +76,11 @@ function displayNextTweet() {
     marquee.one('animationiteration', displayNextTweet);
     toggleUsername(handle);
     if(handle) {
-        queueConversation(text);
+        requestConversation(text);
     }
 }
 
-function queueConversation(text) {
+function requestConversation(text) {
     text = text.replace(/(@[^ ]+)/g, '').
                 replace(/(#[^ ]+)/g, '').
                 replace(/(https?:\/\/[^ ]+)/g, '').

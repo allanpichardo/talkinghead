@@ -31,7 +31,6 @@ app.get('/', (req, res) => {
 wss.on('connection', function connection(client) {
     console.log('Client connection');
     client.on('message', function (data) {
-        console.log(data);
         data = JSON.parse(data);
         switch (data.route) {
             case 'discuss':
@@ -66,11 +65,25 @@ function discuss(text, client) {
             const entities = results[0].entities;
 
             let topics = [];
-            entities.forEach((entity) => {
-                topics.push(entity.name);
+            let query = "select * from comments where ";
+            entities.forEach((entity, i) => {
+                query += (i === entities.length - 1) ? "parent like ? " : "parent like ? or ";
+                topics.push(`%${entity.name}%`);
             });
+            query += "order by random() limit 1";
+            console.log(query);
+            console.log(topics);
 
-
+            db.get(query, topics, function(err, row) {
+                if(err) {
+                    console.log(err);
+                }else if(row){
+                    row.route = 'dialogue';
+                    if (client.readyState === WebSocket.OPEN) {
+                        client.send(JSON.stringify(row));
+                    }
+                }
+            });
         })
         .catch(err => {
             console.error('ERROR:', err);
