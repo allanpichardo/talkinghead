@@ -13,58 +13,78 @@ body {
     grid-template-areas:
     "time"
     "main"
-    "stream";
-    grid-template-rows: 40px 1fr 80px;
+    "stream"
+    "gutter";
+    grid-template-rows: 30px 1fr 70px 30px;
+}
+
+.gutter {
+    position:relative;
+    grid-area: gutter;
 }
 
 .main {
+    width:100%;
+    height:100%;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
     display: grid;
     grid-template-areas:
-    "pundit1 pundit2 headlines";
-    grid-template-columns: 2fr 2fr 1fr;
+    ". . . . ."
+    ". pundit1 . pundit2 ."
+    ". . . . .";
+    grid-template-columns: 16px 8fr 1fr 8fr 16px;
+    grid-template-rows: 64px 1fr 64px;
     grid-area: main;
-    min-height:500px;
 }
 
 .pundit1 {
     box-sizing: border-box;;
-    position:relative;
     grid-area: pundit1;
-    border: 1px black solid;
+    border: 4px white solid;
+    box-shadow: 2px 10px 45px -4px rgba(0,0,0,0.75);
 }
 
 .pundit2 {
     box-sizing: border-box;
-    border: 1px black solid;
+    border: 4px white solid;
     grid-area: pundit2;
-}
-
-.headlines {
-    box-sizing: border-box;
-    border: 1px black solid;
-    grid-area: headlines;
+    box-shadow: 2px 10px 45px -4px rgba(0,0,0,0.75);
 }
 
 .time {
     padding-left: 16px;
     grid-area: time;
-    background-color: black;
+    background-color: #333333aa;
     color: white;
     font-size: 0.8rem;
+    align-self:center;
 }
 
 .marquee {
+    background: #d6e5f2;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to top, #eef2f3, #d6e5f2);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to top, #eef2f3, #d6e5f2); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     grid-area: stream;
     overflow:hidden;
-    font-size: 3rem;
     white-space: nowrap;
     box-sizing: border-box;
-    line-height:0px;
+    margin-left: 16px;
+    margin-right: 16px;
+    border-radius:2px;
+    border: 1px #d6e5f2 solid;
+    box-shadow: 2px 10px 45px -4px rgba(0,0,0,0.75);
+    align-self:center;
 }
 .marquee p {
     display: inline-block;
     padding-left: 100%;
     animation: marquee 20s linear infinite;
+    font-size: 2.8rem;
+    font-weight: bolder;
+    line-height:0;
 }
 @keyframes marquee {
     0%   { transform: translate(0, 0); }
@@ -72,24 +92,32 @@ body {
 }
 
 .slider {
+    display:flex;
     box-sizing:border-box;
+    align-items: center;
     position:absolute;
-    bottom:0;
+    bottom:100px;
     left:0;
     height:40px;
     width: 0;
     z-index:2;
-    background-color: white;
     transition: width 1s ease-in-out;
     overflow:hidden;
+    border-radius: 2px;
+    margin-left: 16px;
+    background-color: #333333;
+    box-shadow: 2px 10px 45px -4px rgba(0,0,0,0.75);
+    color: #d6e5f2;
+    font-weight: bold;
+    font-size:1.1rem;
 }
 
-#handle p{
-    min-width: 100%;
+#handle{
+    min-width: 200px;
 }
 
 .slider-open {
-    width: 80%;
+    width: 200px;
 }
 
 .blue_pattern_background {
