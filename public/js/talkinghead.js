@@ -3,6 +3,7 @@ let dialogueQueue = [];
 let socket;
 let synthesizer;
 let voices;
+let canInterrupt = true;
 
 function main() {
     socket = new WebSocket("ws://localhost:8080");
@@ -76,7 +77,10 @@ function displayNextTweet() {
     marquee.one('animationiteration', displayNextTweet);
     toggleUsername(handle);
     if(handle) {
+        canInterrupt = false;
         requestConversation(text);
+    } else {
+        canInterrupt = true;
     }
 }
 
@@ -122,4 +126,8 @@ function displayDate() {
 
 function handleTweetReceived(data) {
     messageQueue.push(data);
+    if(canInterrupt) {
+        console.log("interrupt");
+        displayNextTweet();
+    }
 }

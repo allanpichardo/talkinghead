@@ -95,6 +95,7 @@ body {
     display:flex;
     box-sizing:border-box;
     align-items: center;
+    justify-items: center;
     position:absolute;
     bottom:100px;
     left:0;
@@ -126,7 +127,26 @@ body {
     background-size: 30px 30px, 90px 90px;
 }
 
-.red_pattern_background {
-    background: linear-gradient(-45deg, #ff5c50 var(--bg2_traingle_size), transparent 1%), #ff1837;
+.red_pattern_background1 {
+    background: linear-gradient(-45deg, #ff5c50 20px, transparent 1%), #ff1837;
     background-size: 50px 50px;
+
+}
+
+.red_pattern_background2 {
+    background: linear-gradient(-45deg, #ff5c50 50px, transparent 1%), #ff1837;
+    background-size: 50px 50px;
+    animation: background-movement 10s linear infinite alternate;
+}
+
+.bg {
+    position:absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+@keyframes background-movement {
+    from {opacity: 1;}
+    to {opacity: 0;}
 }
