@@ -2,7 +2,7 @@ const WebSocket = require('ws');
 const express = require('express');
 const path = require('path');
 const Twit = require('twit');
-const config = require('./config');
+const config = require('./config.json');
 const language = require('@google-cloud/language');
 const sqlite3 = require('sqlite3').verbose();
 
