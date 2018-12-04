@@ -166,3 +166,4 @@ modules.xml
 config.json
 google_client.json
 db/*.db
+*.pem

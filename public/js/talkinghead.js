@@ -6,7 +6,7 @@ let voices;
 let canInterrupt = true;
 
 function main() {
-    socket = new WebSocket(`ws://${self.location.hostname}:8080`);
+    socket = new WebSocket(`wss://${self.location.hostname}:3000`);
     console.log(self.location);
     synthesizer = window.speechSynthesis;
     synthesizer.onvoiceschanged = function() {

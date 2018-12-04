@@ -1,10 +1,17 @@
 const WebSocket = require('ws');
 const express = require('express');
+const fs = require('fs');
+const https = require('https');
 const path = require('path');
 const Twit = require('twit');
 const config = require('./config.json');
 const language = require('@google-cloud/language');
 const sqlite3 = require('sqlite3').verbose();
+
+const httpsOptions = {
+    key: fs.readFileSync(config.keyfile_path, 'utf8'),
+    cert: fs.readFileSync(config.certificate_path, 'utf8')
+};
 
 const googleClient = new language.LanguageServiceClient({
     projectId: config.google_project_id,
@@ -19,7 +26,8 @@ const twitter = new Twit({
 
 let db = new sqlite3.cached.Database('db/talkinghead.db');
 const app = express();
-const wss = new WebSocket.Server({port: 8080});
+const server = https.createServer(httpsOptions, app);
+const wss = new WebSocket.Server({server});
 const port = 3000;
 
 app.use(express.static('public'));
@@ -41,7 +49,8 @@ wss.on('connection', function connection(client) {
 });
 
 
-app.listen(port, () => console.log(`Talkinghead server listening on port ${port}!`));
+// app.listen(port, () => console.log(`Talkinghead server listening on port ${port}!`));
+server.listen(port);
 
 function broadcast(route, data) {
     data.route = route;
