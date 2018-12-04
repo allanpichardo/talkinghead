@@ -4,6 +4,9 @@ let socket;
 let synthesizer;
 let voices;
 let canInterrupt = true;
+let left;
+let right;
+let volume = 0;
 
 function main() {
     socket = new WebSocket(`wss://${self.location.hostname}:3000`);
@@ -20,21 +23,53 @@ function main() {
         console.log(error);
     };
 
+    $('#volume_button').click(handleVolumeClick);
+
     initTime();
     initTicker();
+}
+
+function handleVolumeClick() {
+    if(volume > 0) {
+        setVolume(0);
+        $(this).html('<i class="material-icons">volume_off</i>');
+        if(synthesizer.speaking) {
+            synthesizer.pause();
+        }
+    } else {
+        setVolume(1);
+        $(this).html('<i class="material-icons">volume_up</i>');
+        if(synthesizer.speaking) {
+            synthesizer.resume();
+        }
+    }
+}
+
+function setVolume(vol) {
+    volume = vol;
+    if(left) {
+        left.volume = vol;
+    }
+    if(right) {
+        right.volume = vol;
+    }
 }
 
 function startConversation() {
     let woman = $('.woman');
     let man = $('.man');
-    if(!synthesizer.speaking && dialogueQueue.length > 0) {
+    if(!synthesizer.speaking && dialogueQueue.length > 0 && volume > 0) {
         let conversation = dialogueQueue.shift();
-        let left = new SpeechSynthesisUtterance(conversation.parent);
+        left = new SpeechSynthesisUtterance(conversation.parent);
+        left.volume = volume;
+        console.log(volume);
         left.voice = voices.filter(function(voice) { return voice.name === 'Fiona'; })[0];
 
         left.onend = function(e) {
             toggleTalkingAnimation(woman, false);
-            let right = new SpeechSynthesisUtterance(conversation.comment);
+            right = new SpeechSynthesisUtterance(conversation.comment);
+            right.volume = volume;
+            console.log(volume);
             right.voice = voices.filter(function(voice) { return voice.name === 'Alex'; })[0];
             synthesizer.speak(right);
 
