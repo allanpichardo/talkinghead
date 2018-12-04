@@ -40,18 +40,76 @@ body {
     grid-area: main;
 }
 
+.woman {
+    position:absolute;
+    bottom: -10px;
+    width: 600px;
+    height: 400px;
+    background: url('../img/pundit1.png') left top;
+}
+
+.man {
+    position:absolute;
+    bottom:-10px;
+    width: 600px;
+    height: 400px;
+    background: url('../img/pundit2.png') left top;
+}
+
+.animate_blink {
+    animation: blink 3.5s steps(6) infinite;
+}
+
+.animate_talk {
+    animation: talk 2s steps(6) infinite;
+}
+
+@keyframes blink {
+    0% {
+        background-position: left 0px;
+    }
+    100% {
+        background-position: -3600px 0px;
+    }
+}
+
+@keyframes talk {
+    0% {
+        background-position: left bottom;
+    }
+    100% {
+        background-position: -3600px bottom;
+    }
+}
+
 .pundit1 {
+    position:relative;
+    align-items: end;
     box-sizing: border-box;;
     grid-area: pundit1;
     border: 4px white solid;
+    overflow:hidden;
     box-shadow: 2px 10px 45px -4px rgba(0,0,0,0.75);
 }
 
 .pundit2 {
+    position:relative;
     box-sizing: border-box;
     border: 4px white solid;
     grid-area: pundit2;
+    overflow: hidden;
     box-shadow: 2px 10px 45px -4px rgba(0,0,0,0.75);
+}
+
+.bg_newsroom {
+    background-image: linear-gradient(45deg, white 25%, blue 25%), linear-gradient(-45deg, white 25%, blue 25%), linear-gradient(45deg, blue 75%, white 75%), linear-gradient(-45deg, blue 75%, white 75%);
+    background-size: 20px 20px;
+    animation: scrolling 20s linear infinite;
+}
+
+@keyframes scrolling {
+    0% {background-position: 0px 0px;}
+    100% {background-position: -100px -100px;}
 }
 
 .time {

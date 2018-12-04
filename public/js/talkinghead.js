@@ -25,22 +25,33 @@ function main() {
 }
 
 function startConversation() {
+    let woman = $('.woman');
+    let man = $('.man');
     if(!synthesizer.speaking && dialogueQueue.length > 0) {
         let conversation = dialogueQueue.shift();
         let left = new SpeechSynthesisUtterance(conversation.parent);
         left.voice = voices.filter(function(voice) { return voice.name === 'Fiona'; })[0];
 
         left.onend = function(e) {
+            toggleTalkingAnimation(woman, false);
             let right = new SpeechSynthesisUtterance(conversation.comment);
             right.voice = voices.filter(function(voice) { return voice.name === 'Alex'; })[0];
             synthesizer.speak(right);
 
             right.onend = function() {
                 startConversation();
+                toggleTalkingAnimation(man, false);
             };
+            toggleTalkingAnimation(man, true);
         };
         synthesizer.speak(left);
+        toggleTalkingAnimation(woman, true);
     }
+}
+
+function toggleTalkingAnimation(on, isTalking) {
+    on.toggleClass('animate_blink', !isTalking);
+    on.toggleClass('animate_talk', isTalking);
 }
 
 function handleDialogueReceived(data) {
