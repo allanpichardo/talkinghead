@@ -99,8 +99,9 @@ body {
     margin-left: auto;
     margin-right: auto;
     bottom: -10px;
-    width: 600px;
-    height: 400px;
+    left: calc(40% - 375px);
+    width: 750px;
+    height: 595px;
     background: url('../img/pundit1.png') left top;
 }
 
@@ -109,8 +110,9 @@ body {
     margin-left: auto;
     margin-right: auto;
     bottom:-10px;
-    width: 600px;
-    height: 400px;
+    left: calc(40% - 375px);
+    width: 750px;
+    height: 595px;
     background: url('../img/pundit2.png') left top;
 }
 
@@ -127,7 +129,7 @@ body {
         background-position: left 0px;
     }
     100% {
-        background-position: -3600px 0px;
+        background-position: -5400px 0px;
     }
 }
 
@@ -136,7 +138,7 @@ body {
         background-position: left bottom;
     }
     100% {
-        background-position: -3600px bottom;
+        background-position: -5400px bottom;
     }
 }
 
