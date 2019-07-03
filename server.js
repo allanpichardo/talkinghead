@@ -74,10 +74,10 @@ function discuss(text, client) {
             const entities = results[0].entities;
 
             let topics = [];
-            let query = "select * from comments where ";
+            let query = "select * from comments_search where ";
             entities.forEach((entity, i) => {
-                query += (i === entities.length - 1) ? "parent like ? " : "parent like ? or ";
-                topics.push(`%${entity.name}%`);
+                query += (i === entities.length - 1) ? "parent match ? " : "parent match ? or ";
+                topics.push(`${entity.name}`);
             });
             query += "order by random() limit 1";
             console.log(query);
