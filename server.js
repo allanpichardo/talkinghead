@@ -87,6 +87,7 @@ function discuss(text, client) {
                 if(err) {
                     console.log(err);
                 }else if(row){
+                    console.log(row);
                     row.route = 'dialogue';
                     if (client.readyState === WebSocket.OPEN) {
                         client.send(JSON.stringify(row));
