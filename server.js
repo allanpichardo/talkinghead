@@ -27,9 +27,14 @@ const twitter = new Twit({
 let db = new sqlite3.cached.Database('db/talkinghead.db');
 const app = express();
 // const server = https.createServer(httpsOptions, app);
+const server = https.createServer(function(req, res){
+
+    // Send HTML headers and message
+    res.writeHead(200,{ 'Content-Type': 'text/html' });
+    res.end('<h1>Hello Socket Lover!</h1>');
+});
 const wss = new WebSocket.Server({
-    // server
-    port: 80
+    server
 });
 const port = 3000;
 
