@@ -49,8 +49,8 @@ wss.on('connection', function connection(client) {
 });
 
 
-// app.listen(port, () => console.log(`Talkinghead server listening on port ${port}!`));
-server.listen(port);
+app.listen(port, () => console.log(`Talkinghead server listening on port ${port}!`));
+// server.listen(port, () => console.log(`Talkinghead secure server listening on port ${port}!`));
 
 function broadcast(route, data) {
     data.route = route;
