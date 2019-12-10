@@ -30,7 +30,7 @@ const server = https.createServer(httpsOptions, app);
 const wss = new WebSocket.Server({server});
 const port = 3000;
 
-app.use(express.static('public'));
+app.use(express.static('public', { dotfiles: 'allow' }));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));

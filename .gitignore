@@ -170,3 +170,4 @@ config.json
 google_client.json
 db/*.db
 *.pem
+/public/.well-known/acme-challenge/
