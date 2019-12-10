@@ -26,8 +26,10 @@ const twitter = new Twit({
 
 let db = new sqlite3.cached.Database('db/talkinghead.db');
 const app = express();
-const server = https.createServer(httpsOptions, app);
-const wss = new WebSocket.Server({server});
+// const server = https.createServer(httpsOptions, app);
+const wss = new WebSocket.Server({
+    // server
+});
 const port = 3000;
 
 app.use(express.static('public', { dotfiles: 'allow' }));
