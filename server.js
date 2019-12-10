@@ -1,7 +1,7 @@
 const WebSocket = require('ws');
 const express = require('express');
 const fs = require('fs');
-const https = require('http');
+const https = require('https');
 const path = require('path');
 const Twit = require('twit');
 const config = require('./config.json');
@@ -9,8 +9,8 @@ const language = require('@google-cloud/language');
 const sqlite3 = require('sqlite3').verbose();
 
 const httpsOptions = {
-    // key: fs.readFileSync(config.keyfile_path, 'utf8'),
-    // cert: fs.readFileSync(config.certificate_path, 'utf8')
+    key: fs.readFileSync(config.keyfile_path, 'utf8'),
+    cert: fs.readFileSync(config.certificate_path, 'utf8')
 };
 
 const googleClient = new language.LanguageServiceClient({
@@ -26,13 +26,7 @@ const twitter = new Twit({
 
 let db = new sqlite3.cached.Database('db/talkinghead.db');
 const app = express();
-// const server = https.createServer(httpsOptions, app);
-const server = https.createServer(function(req, res){
-
-    // Send HTML headers and message
-    res.writeHead(200,{ 'Content-Type': 'text/html' });
-    res.end('<h1>Hello Socket Lover!</h1>');
-});
+const server = https.createServer(httpsOptions, app);
 const wss = new WebSocket.Server({
     server
 });
@@ -57,8 +51,8 @@ wss.on('connection', function connection(client) {
 });
 
 
-app.listen(port, () => console.log(`Talkinghead server listening on port ${port}!`));
-// server.listen(port, () => console.log(`Talkinghead secure server listening on port ${port}!`));
+// app.listen(port, () => console.log(`Talkinghead server listening on port ${port}!`));
+server.listen(port, () => console.log(`Talkinghead secure server listening on port ${port}!`));
 
 function broadcast(route, data) {
     data.route = route;
