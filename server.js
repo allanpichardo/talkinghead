@@ -9,8 +9,8 @@ const language = require('@google-cloud/language');
 const sqlite3 = require('sqlite3').verbose();
 
 const httpsOptions = {
-    key: fs.readFileSync(config.keyfile_path, 'utf8'),
-    cert: fs.readFileSync(config.certificate_path, 'utf8')
+    // key: fs.readFileSync(config.keyfile_path, 'utf8'),
+    // cert: fs.readFileSync(config.certificate_path, 'utf8')
 };
 
 const googleClient = new language.LanguageServiceClient({
