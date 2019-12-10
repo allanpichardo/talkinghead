@@ -29,6 +29,7 @@ const app = express();
 // const server = https.createServer(httpsOptions, app);
 const wss = new WebSocket.Server({
     // server
+    port: 80
 });
 const port = 3000;
 
