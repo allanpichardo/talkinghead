@@ -7,6 +7,7 @@ const Twit = require('twit');
 const config = require('./config.json');
 const language = require('@google-cloud/language');
 const sqlite3 = require('sqlite3').verbose();
+const run = require('./run');
 
 const httpsOptions = {
     key: fs.readFileSync(config.keyfile_path, 'utf8'),
@@ -52,7 +53,15 @@ wss.on('connection', function connection(client) {
 
 
 // app.listen(port, () => console.log(`Talkinghead server listening on port ${port}!`));
-server.listen(port, () => console.log(`Talkinghead secure server listening on port ${port}!`));
+server.listen(port, () => {
+    console.log(`Talkinghead secure server listening on port ${port}!`);
+    console.log('Starting kiosk.');
+    run().then(() => {
+        console.log('Kiosk started.');
+    }).catch(e => {
+        console.error(e);
+    })
+});
 
 function broadcast(route, data) {
     data.route = route;

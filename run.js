@@ -23,7 +23,7 @@ function launchChrome(headless=true, scaleFactor=0.5, width=640, height=480) {
   });
 }
 
-async function main() {
+async function run() {
   const chrome = await launchChrome(false);
   const protocol = await CDP({port: chrome.port});
   const {Page, Runtime, Security, Emulation, Input} = protocol;
@@ -42,6 +42,7 @@ async function main() {
       modifiers: 4,
       code: "Minus",
       text: "-",
+      key: "-",
       unmodifiedText: "-",
       keyIdentifier: "Subtract",
       nativeVirtualKeyCode: 0x6D
@@ -54,6 +55,7 @@ async function main() {
       modifiers: 2,
       code: "Minus",
       text: "-",
+      key: "-",
       unmodifiedText: "-",
       keyIdentifier: "Subtract",
       nativeVirtualKeyCode: 0xFFAD
@@ -62,9 +64,4 @@ async function main() {
 
   await Runtime.evaluate({expression: "document.getElementById('volume_button').click();"});
 }
-
-main().then(() => {
-  //blah
-}).catch(e => {
-  console.error(e);
-})
+module.exports = run;
