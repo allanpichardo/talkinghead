@@ -16,6 +16,8 @@ function launchChrome(headless=true, scaleFactor=0.5, width=640, height=480) {
       '--kiosk',
       '--incognito',
       '--window-position=0,0',
+      '--disable-infobars',
+      '--noerrdialogs',
       headless ? '--headless' : ''
     ],
   });

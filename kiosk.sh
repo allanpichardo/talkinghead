@@ -1,4 +1,5 @@
 #!/bin/sh
+sudo killall chromium-browser
 export CHROME_PATH="/usr/bin/chromium-browser"
 xset -dpms     # disable DPMS (Energy Star) features.
 xset s off     # disable screen saver
