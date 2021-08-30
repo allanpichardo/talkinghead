@@ -6,4 +6,4 @@ xset s off     # disable screen saver
 xset s noblank # don't blank the video device
 matchbox-window-manager -use_titlebar no &
 unclutter &    # hide X mouse cursor unless mouse activated
-npm --prefix /home/pi/talkinhead start &
+npm --prefix /home/pi/talkinghead start &
