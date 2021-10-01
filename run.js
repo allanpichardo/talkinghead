@@ -18,7 +18,7 @@ function launchChrome(headless=true, scaleFactor=0.5, width=640, height=480) {
       '--window-position=0,0',
       '--disable-infobars',
       '--noerrdialogs',
-      '--enable-speech-dispatcher',
+      // '--enable-speech-dispatcher',
       `--force-device-scale-factor=${scaleFactor}`,
       headless ? '--headless' : ''
     ],
