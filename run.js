@@ -36,7 +36,7 @@ async function run() {
 
   // await Page.navigate({url: 'chrome://settings'});
   // await Runtime.evaluate({expression: "chrome.settingsPrivate.setDefaultZoom(0.5);"});
-  await Page.navigate({url: 'https://localhost:3000/'});
+  await Page.navigate({url: 'https://localhost:3000'});
   await Page.loadEventFired();
 
   for (let i = 0; i < 5; i++) {

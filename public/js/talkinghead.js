@@ -15,6 +15,7 @@ function main() {
     synthesizer.onvoiceschanged = function() {
         voices = synthesizer.getVoices();
     };
+    synthesizer.getVoices();
 
     socket.onmessage = function(event) {
         processSocketMessage(event.data);
