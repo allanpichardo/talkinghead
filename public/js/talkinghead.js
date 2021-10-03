@@ -64,14 +64,18 @@ function startConversation() {
         left = new SpeechSynthesisUtterance(conversation.parent);
         left.volume = volume;
         console.log(volume);
-        left.voice = voices.filter(function(voice) { return voice.name === 'Fiona'; })[0];
+        left.voice = voices.filter(function(voice) { return voice.name.includes('us1'); })[0];
+        left.pitch = 0.9;
+        left.rate = 0.9;
 
         left.onend = function(e) {
             toggleTalkingAnimation(woman, false);
             right = new SpeechSynthesisUtterance(conversation.comment);
             right.volume = volume;
             console.log(volume);
-            right.voice = voices.filter(function(voice) { return voice.name === 'Alex'; })[0];
+            right.voice = voices.filter(function(voice) { return voice.name.includes('us2'); })[0];
+            right.pitch = 0.9;
+            right.rate = 0.9;
             synthesizer.speak(right);
 
             right.onend = function() {
