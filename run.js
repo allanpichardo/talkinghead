@@ -9,6 +9,7 @@ const CDP = require('chrome-remote-interface');
  */
 function launchChrome(headless=true, scaleFactor=0.5, width=640, height=480) {
   return chromeLauncher.launch({
+    startingUrl: 'https://localhost:3000',
     port: 9222, // Uncomment to force a specific port of your choice.
     chromeFlags: [
       `--window-size=${width},${height}`,
