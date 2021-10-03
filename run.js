@@ -15,6 +15,7 @@ function launchChrome(headless=true, scaleFactor=0.5, width=640, height=480) {
       `--window-size=${width},${height}`,
       '--display=:0',
       '--kiosk',
+      '--no-sandbox',
       '--incognito',
       '--window-position=0,0',
       '--disable-infobars',
