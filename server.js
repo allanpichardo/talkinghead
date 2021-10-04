@@ -8,7 +8,7 @@ const config = require('./config.json');
 const language = require('@google-cloud/language');
 const sqlite3 = require('sqlite3').verbose();
 const run = require('./run');
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 
 const httpsOptions = {
     key: fs.readFileSync(config.keyfile_path, 'utf8'),
@@ -69,9 +69,17 @@ server.listen(port, () => {
 });
 
 function say(text, voice, client) {
-    proc = exec(`voxin-say -j 2 -l ${voice} "${text}" | aplay`);
-    proc.on('close', () => {
-        reply = {};
+    const child = spawn(`voxin-say -j 2 -l ${voice} "${text}" | aplay`);
+    child.stdout.on('data', () => {
+        const reply = {};
+        reply.route = 'speech-start';
+        reply.voice = voice;
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify(reply));
+        }
+    });
+    child.on('close', () => {
+        const reply = {};
         reply.route = 'speech-end';
         reply.voice = voice;
         if (client.readyState === WebSocket.OPEN) {

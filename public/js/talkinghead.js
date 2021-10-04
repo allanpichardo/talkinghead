@@ -55,14 +55,13 @@ function setVolume(vol) {
 }
 
 function handleFemaleSpeechEnd() {
-    toggleTalkingAnimation(woman, false);
+    toggleTalkingAnimation($('.woman'), false);
     say(next, VOICE_MALE);
-    toggleTalkingAnimation(man, true);
 }
 
 function handleMaleSpeechEnd() {
+    toggleTalkingAnimation($('.man'), false);
     startConversation();
-    toggleTalkingAnimation(man, false);
 }
 
 function say(text, voice) {
@@ -76,13 +75,10 @@ function say(text, voice) {
 }
 
 function startConversation() {
-    let woman = $('.woman');
-    let man = $('.man');
     if(!isSpeaking && dialogueQueue.length > 0 && volume > 0) {
         let conversation = dialogueQueue.shift();
         next = conversation.comment;
         say(conversation.parent, VOICE_FEMALE);
-        toggleTalkingAnimation(woman, true);
     }
 }
 
@@ -108,6 +104,17 @@ function handleSpeechEndReceived(data) {
     }
 }
 
+function handleSpeechStartReceived(data) {
+    switch (data.voice) {
+        case VOICE_FEMALE:
+            toggleTalkingAnimation($('.woman'), true);
+            break;
+        case VOICE_MALE:
+            toggleTalkingAnimation($('.man'), true);
+            break;
+    }
+}
+
 function processSocketMessage(data) {
     data = JSON.parse(data);
     switch(data.route) {
@@ -119,6 +126,9 @@ function processSocketMessage(data) {
             break;
         case 'speech-end':
             handleSpeechEndReceived(data);
+            break;
+        case 'speech-start':
+            handleSpeechStartReceived(data);
             break;
     }
 }
