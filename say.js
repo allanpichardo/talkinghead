@@ -15,6 +15,10 @@ function say(text, voice, client) {
     }
   });
 
+  child.on('data', data => {
+    console.log(data);
+  });
+
   console.log("Sending speech start");
   const data = {};
   data.route = 'speech-start';
