@@ -1,21 +1,19 @@
 let messageQueue = [];
 let dialogueQueue = [];
 let socket;
-let synthesizer;
-let voices;
 let canInterrupt = true;
 let left;
 let right;
 let volume = 0;
+let isSpeaking = false;
+let next = "";
+
+const VOICE_FEMALE = "susan-embedded-high";
+const VOICE_MALE = "nathan-embedded-high";
 
 function main() {
     socket = new WebSocket(`wss://${self.location.hostname}:3000`);
     console.log(self.location);
-    synthesizer = window.speechSynthesis;
-    synthesizer.onvoiceschanged = function() {
-        voices = synthesizer.getVoices();
-    };
-    synthesizer.getVoices();
 
     socket.onmessage = function(event) {
         processSocketMessage(event.data);
@@ -56,35 +54,34 @@ function setVolume(vol) {
     }
 }
 
+function handleFemaleSpeechEnd() {
+    toggleTalkingAnimation(woman, false);
+    say(next, VOICE_MALE);
+    toggleTalkingAnimation(man, true);
+}
+
+function handleMaleSpeechEnd() {
+    startConversation();
+    toggleTalkingAnimation(man, false);
+}
+
+function say(text, voice) {
+    let data = {
+        route: 'say',
+        text: text,
+        voice: voice
+    };
+    isSpeaking = true;
+    socket.send(JSON.stringify(data));
+}
+
 function startConversation() {
     let woman = $('.woman');
     let man = $('.man');
-    if(!synthesizer.speaking && dialogueQueue.length > 0 && volume > 0) {
+    if(!isSpeaking && dialogueQueue.length > 0 && volume > 0) {
         let conversation = dialogueQueue.shift();
-        left = new SpeechSynthesisUtterance(conversation.parent);
-        left.volume = volume;
-        console.log(volume);
-        left.voice = voices.filter(function(voice) { return voice.name.includes('susan'); })[0];
-        left.pitch = 0.9;
-        left.rate = 0.9;
-
-        left.onend = function(e) {
-            toggleTalkingAnimation(woman, false);
-            right = new SpeechSynthesisUtterance(conversation.comment);
-            right.volume = volume;
-            console.log(volume);
-            right.voice = voices.filter(function(voice) { return voice.name.includes('nathan'); })[0];
-            right.pitch = 0.9;
-            right.rate = 0.9;
-            synthesizer.speak(right);
-
-            right.onend = function() {
-                startConversation();
-                toggleTalkingAnimation(man, false);
-            };
-            toggleTalkingAnimation(man, true);
-        };
-        synthesizer.speak(left);
+        next = conversation.comment;
+        say(conversation.parent, VOICE_FEMALE);
         toggleTalkingAnimation(woman, true);
     }
 }
@@ -99,6 +96,18 @@ function handleDialogueReceived(data) {
     startConversation();
 }
 
+function handleSpeechEndReceived(data) {
+    isSpeaking = false;
+    switch (data.voice) {
+        case VOICE_FEMALE:
+            handleFemaleSpeechEnd();
+            break;
+        case VOICE_MALE:
+            handleMaleSpeechEnd();
+            break;
+    }
+}
+
 function processSocketMessage(data) {
     data = JSON.parse(data);
     switch(data.route) {
@@ -107,6 +116,9 @@ function processSocketMessage(data) {
             break;
         case 'dialogue':
             handleDialogueReceived(data);
+            break;
+        case 'speech-end':
+            handleSpeechEndReceived(data);
             break;
     }
 }
