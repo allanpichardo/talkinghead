@@ -15,7 +15,7 @@ function say(text, voice, client) {
     }
   });
 
-  child.stdout.on("data", data => {
+  child.on("data", data => {
     console.log(data);
   });
 
