@@ -8,11 +8,12 @@ function say(text, voice, client) {
 
   voxin.on('close', () => {
     console.log(`voxin closed`);
-    const reply = {};
-    reply.route = 'speech-end';
-    reply.voice = voice;
+    console.log("Sending speech start");
+    const data = {};
+    data.route = 'speech-start';
+    data.voice = voice;
     if (client.readyState === WebSocket.OPEN) {
-      client.send(JSON.stringify(reply));
+      client.send(JSON.stringify(data));
     }
   });
 
@@ -22,17 +23,14 @@ function say(text, voice, client) {
 
   aplay.on('close', () => {
     console.log('aplay closed');
+    const reply = {};
+    reply.route = 'speech-end';
+    reply.voice = voice;
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(reply));
+    }
   });
 
-  setTimeout(() => {
-    console.log("Sending speech start");
-    const data = {};
-    data.route = 'speech-start';
-    data.voice = voice;
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(JSON.stringify(data));
-    }
-  }, 2000);
 }
 
 module.exports = { say }
