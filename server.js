@@ -150,4 +150,4 @@ function main() {
 
 main();
 
-module.exports = say;
+module.exports = { say }
