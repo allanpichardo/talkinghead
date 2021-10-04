@@ -70,7 +70,7 @@ server.listen(port, () => {
 
 function say(text, voice, client) {
     const aplay = spawn('aplay');
-    const voxin = spawn(`voxin-say -l ${voice} "${text}"`);
+    const voxin = spawn(`voxin-say`, ['-l', voice, `"${text}"`]);
     voxin.stdout.pipe(aplay.stdin);
 
     aplay.stdout.on('data', () => {
