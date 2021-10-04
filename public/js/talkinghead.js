@@ -115,6 +115,13 @@ function handleSpeechStartReceived(data) {
     }
 }
 
+function handleVoiceError() {
+    toggleTalkingAnimation($('.woman'), false);
+    toggleTalkingAnimation($('.man'), false);
+    isSpeaking = false;
+    startConversation();
+}
+
 function processSocketMessage(data) {
     data = JSON.parse(data);
     switch(data.route) {
@@ -129,6 +136,9 @@ function processSocketMessage(data) {
             break;
         case 'speech-start':
             handleSpeechStartReceived(data);
+            break;
+        case 'error':
+            handleVoiceError();
             break;
     }
 }

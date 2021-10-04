@@ -6,14 +6,23 @@ function say(text, voice, client) {
   const voxin = spawn(`voxin-say -l ${voice} "${text}" | cat`, {shell: true, });
   const aplay = spawn(`aplay`);
 
-  voxin.on('close', () => {
-    console.log(`voxin closed`);
-    console.log("Sending speech start");
-    const data = {};
-    data.route = 'speech-start';
-    data.voice = voice;
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(JSON.stringify(data));
+  voxin.on('exit', (code) => {
+    if(code === 0) {
+      console.log(`voxin closed`);
+      console.log("Sending speech start");
+      const data = {};
+      data.route = 'speech-start';
+      data.voice = voice;
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(data));
+      }
+    } else {
+      console.log(`an error occurred`);
+      const data = {};
+      data.route = 'error';
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(data));
+      }
     }
   });
 
