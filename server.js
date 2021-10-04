@@ -69,8 +69,8 @@ server.listen(port, () => {
 });
 
 function say(text, voice, client) {
-    proc = exec(`voxin-say -l ${voice} "${text}" | aplay`);
-    proc.on('exit', () => {
+    proc = exec(`voxin-say -j 2 -l ${voice} "${text}" | aplay`);
+    proc.on('close', () => {
         reply = {};
         reply.route = 'speech-end';
         reply.voice = voice;
