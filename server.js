@@ -69,14 +69,15 @@ server.listen(port, () => {
 });
 
 function say(text, voice, client) {
-    exec(`voxin-say -l ${voice} "${text}" | aplay`, ((error, stdout) => {
+    proc = exec(`voxin-say -l ${voice} "${text}" | aplay`);
+    proc.on('exit', () => {
         reply = {};
         reply.route = 'speech-end';
         reply.voice = voice;
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(reply));
         }
-    }));
+    });
 }
 
 function broadcast(route, data) {
