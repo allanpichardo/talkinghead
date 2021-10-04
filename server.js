@@ -69,21 +69,22 @@ server.listen(port, () => {
 });
 
 function say(text, voice, client) {
-    const aplay = spawn('aplay');
     const voxin = spawn(`voxin-say`, ['-l', voice, `"${text}"`]);
-    voxin.stdout.pipe(aplay.stdin);
 
-    aplay.stdout.on('data', () => {
+    voxin.stdout.on('data', data => {
+        const aplay = spawn('aplay');
+        aplay.stdin.write(data);
+        aplay.on('close', () => {
+            const reply = {};
+            reply.route = 'speech-end';
+            reply.voice = voice;
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify(reply));
+            }
+        });
+
         const reply = {};
         reply.route = 'speech-start';
-        reply.voice = voice;
-        if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify(reply));
-        }
-    });
-    aplay.on('close', () => {
-        const reply = {};
-        reply.route = 'speech-end';
         reply.voice = voice;
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(reply));
