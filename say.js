@@ -3,11 +3,12 @@ const WebSocket = require('ws');
 
 function say(text, voice, client) {
   console.log(`Spawning voxin with voice ${voice}`);
+  let dataReceived = false;
   const voxin = spawn(`voxin-say -l ${voice} "${text}" | cat`, {shell: true, });
   const aplay = spawn(`aplay`);
 
   voxin.on('exit', (code) => {
-    if(code === 0) {
+    if(dataReceived) {
       console.log(`voxin closed`);
       console.log("Sending speech start");
       const data = {};
@@ -27,6 +28,7 @@ function say(text, voice, client) {
   });
 
   voxin.stdout.on('data', data => {
+    dataReceived = true;
     console.log('voxin > aplay data received...');
     aplay.stdin.write(data);
   });
