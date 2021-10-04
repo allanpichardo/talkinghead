@@ -18,6 +18,7 @@ function say(text, voice, client) {
   });
 
   voxin.stdout.on('data', data => {
+    console.log('voxin > aplay data received...');
     aplay.stdin.write(data);
   });
 
