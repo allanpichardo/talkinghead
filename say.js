@@ -3,7 +3,7 @@ const WebSocket = require('ws');
 
 function say(text, voice, client) {
   console.log(`Spawning voxin with voice ${voice}`);
-  const child = spawn(`voxin-say -l ${voice} "${text}" | aplay | cat`, {shell: true, });
+  const child = spawn(`voxin-say -l ${voice} "${text}" | aplay`, {shell: true, });
 
   child.on('close', () => {
     console.log(`aplay closed`);
@@ -15,17 +15,15 @@ function say(text, voice, client) {
     }
   });
 
-  child.on("data", data => {
-    console.log(data);
-  });
-
-  console.log("Sending speech start");
-  const data = {};
-  data.route = 'speech-start';
-  data.voice = voice;
-  if (client.readyState === WebSocket.OPEN) {
-    client.send(JSON.stringify(data));
-  }
+  setTimeout(() => {
+    console.log("Sending speech start");
+    const data = {};
+    data.route = 'speech-start';
+    data.voice = voice;
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(data));
+    }
+  }, 1000);
 }
 
 module.exports = { say }
