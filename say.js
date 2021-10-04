@@ -24,6 +24,7 @@ function say(text, voice, client) {
 
   aplay.on('close', () => {
     console.log('aplay closed');
+    console.log('send speech end');
     const reply = {};
     reply.route = 'speech-end';
     reply.voice = voice;
