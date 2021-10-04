@@ -69,8 +69,11 @@ server.listen(port, () => {
 });
 
 function say(text, voice, client) {
-    const child = spawn(`voxin-say -j 2 -l ${voice} "${text}" | aplay`);
-    child.stdout.on('data', () => {
+    const aplay = spawn('aplay');
+    const voxin = spawn(`voxin-say -l ${voice} "${text}"`);
+    voxin.stdout.pipe(aplay.stdin);
+
+    aplay.stdout.on('data', () => {
         const reply = {};
         reply.route = 'speech-start';
         reply.voice = voice;
@@ -78,7 +81,7 @@ function say(text, voice, client) {
             client.send(JSON.stringify(reply));
         }
     });
-    child.on('close', () => {
+    aplay.on('close', () => {
         const reply = {};
         reply.route = 'speech-end';
         reply.voice = voice;
