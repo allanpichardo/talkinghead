@@ -9,6 +9,7 @@ const language = require('@google-cloud/language');
 const sqlite3 = require('sqlite3').verbose();
 const run = require('./run');
 const { spawn } = require('child_process');
+const { say } = require('./say');
 
 const httpsOptions = {
     key: fs.readFileSync(config.keyfile_path, 'utf8'),
@@ -68,30 +69,6 @@ server.listen(port, () => {
     });
 });
 
-function say(text, voice, client) {
-    const voxin = spawn(`voxin-say`, ['-l', voice, `"${text}"`]);
-
-    voxin.stdout.on('data', data => {
-        const aplay = spawn('aplay');
-        aplay.stdin.write(data);
-        aplay.on('close', () => {
-            const reply = {};
-            reply.route = 'speech-end';
-            reply.voice = voice;
-            if (client.readyState === WebSocket.OPEN) {
-                client.send(JSON.stringify(reply));
-            }
-        });
-
-        const reply = {};
-        reply.route = 'speech-start';
-        reply.voice = voice;
-        if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify(reply));
-        }
-    });
-}
-
 function broadcast(route, data) {
     data.route = route;
     data = JSON.stringify(data);
@@ -149,5 +126,3 @@ function main() {
 }
 
 main();
-
-module.exports = { say }
