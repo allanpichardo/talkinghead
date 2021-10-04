@@ -59,26 +59,13 @@ wss.on('connection', function connection(client) {
 // app.listen(port, () => console.log(`Talkinghead server listening on port ${port}!`));
 server.listen(port, () => {
     console.log(`Talkinghead secure server listening on port ${port}!`);
-    console.log(`Starting Festival TTS in server mode`)
-    exec('festival --server', ((error, stdout, stderr) => {
-        if(error) {
-            console.error(error);
-            process.exit(1);
-        } else if(stderr) {
-            console.error(stderr);
-            process.exit(1);
-        } else {
-            console.log('Festival server started');
-            console.log(stdout);
-            console.log('Starting kiosk.');
-            run().then(() => {
-                console.log('Kiosk started.');
-            }).catch(e => {
-                console.error(e);
-                process.exit(1);
-            });
-        }
-    }));
+    console.log('Starting kiosk.');
+    run().then(() => {
+        console.log('Kiosk started.');
+    }).catch(e => {
+        console.error(e);
+        process.exit(1);
+    });
 });
 
 function say(text, voice, client) {
