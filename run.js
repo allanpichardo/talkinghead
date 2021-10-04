@@ -15,13 +15,11 @@ function launchChrome(headless=true, scaleFactor=0.5, width=640, height=480) {
       `--window-size=${width},${height}`,
       '--display=:0',
       '--kiosk',
-      '--no-sandbox',
       '--incognito',
       '--window-position=0,0',
       '--disable-infobars',
       '--noerrdialogs',
       '--enable-logging=stderr --v=1 > /home/pi/chromium-error.log 2>&1',
-      '--enable-speech-dispatcher',
       `--force-device-scale-factor=${scaleFactor}`,
       headless ? '--headless' : ''
     ],
