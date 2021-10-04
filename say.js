@@ -3,7 +3,7 @@ const WebSocket = require('ws');
 
 function say(text, voice, client) {
   console.log(`Spawning voxin with voice ${voice}`);
-  const child = spawn(`voxin-say -l ${voice} "${text}" | aplay`, {shell: true});
+  const child = spawn(`voxin-say -l ${voice} "${text}" | stdbuf -o L aplay`, {shell: true});
 
   child.on('close', () => {
     console.log(`aplay closed`);
